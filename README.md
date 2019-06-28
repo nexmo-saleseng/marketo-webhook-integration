@@ -27,7 +27,7 @@ Put the following parameters:
 
 - URL: `https://sandbox.nexmodemo.com/v0.1/messages/`
 - Request Type: `POST`
-- Example body: 
+- Example body: be sure to replace `to` field with your phone number
 
 ```json
 {
@@ -87,7 +87,7 @@ Put the following parameters:
 
 - URL: `https://api.nexmo.com/v0.1/messages`
 - Request Type: `POST`
-- Example body: 
+- Example body: be sure to replace `to` field with your phone number
 
 ```json
 {
