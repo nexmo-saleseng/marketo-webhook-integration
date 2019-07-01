@@ -1,9 +1,10 @@
 # marketo-webhook-integration
 
-### WhatsApp
+## WhatsApp
 
 The following document is a guide for building and testing a Marketo Webhook that will send
 messages via Whatsapp using Nexmo Messages API.
+
 
 ### Building the Webhook in Marketo
 
@@ -27,17 +28,17 @@ Put the following parameters:
 
 - URL: `https://sandbox.nexmodemo.com/v0.1/messages/`
 - Request Type: `POST`
-- Example body: be sure to replace `to` field with your phone number
+- Example body: be sure to replace `to` field with your phone number. Use a **WhatsApp Template** for the first message to your customer, otherwise the message will be refused by Whatsapp. For details, [Nexmo Messages WA - Concepts](https://developer.nexmo.com/messages/concepts/whatsapp).
 
 ```json
 {
-	"to": {"type": "whatsapp", "number": "3912345678"},
-	"from": {"type": "whatsapp", "number": "from_number"},
+	"to": {"type": "whatsapp", "number": "{{lead.Phone Number:default=edit me}}"},
+	"from": {"type": "whatsapp", "number": "447418342149"},
 	"message": {"content": {"type": "template", "template":{
             "name":"whatsapp:hsm:technology:nexmo:simplewelcome",
             "parameters":[
                {
-                  "default":"Nexmo"
+                  "default":"Nexmo {{lead.First Name:default=Jon Doe}}"
                },
                {
                   "default":"interact with us over whatsapp. The campaignID is {{campaign.id:default=Campaign Id}}"
@@ -47,20 +48,19 @@ Put the following parameters:
 }
 
 ```
-- Request Token Encoding: JSON
+- Request Token Encoding: None
 
-![Webhook console](img/edit_webhook.png)
+![Webhook console](img/edit_webhook_wa.png)
 
 **Note**: Using the `INSERT TOKEN` button you can also use tokens in the messages body sent via Whatsapp. In the example above, I used campaign id in the message body.
 
 Lastly, select `Webhooks Actions` --> `Set Custom Header` and put `Authorization`: `Bearer {JWT}`, with JWT value. For example, `Authorization: Bearer asd12456789`.
 
 
-
 Great! Now we need to test the Webhook in Marketo.
 
 
-### SMS
+## SMS
 
 The following document is a guide for building and testing a Marketo Webhook that will send
 messages via SMS using Nexmo Messages API.
@@ -70,6 +70,7 @@ messages via SMS using Nexmo Messages API.
 ##### Step 1
 
 Log in to Marketo and navigate to Admin --> My Account
+
 ![Admin console](img/admin_console.png)
 
 ##### Step 2
@@ -87,22 +88,20 @@ Put the following parameters:
 
 - URL: `https://api.nexmo.com/v0.1/messages`
 - Request Type: `POST`
-- Example body: be sure to replace `to` field with your phone number
-
+- Example body: be sure to replace `to` field with your phone number. 
 ```json
 {
     "from": { "type": "sms", "number": "Nexmo" },
-    "to": { "type": "sms", "number": "4400000000" },
+    "to": { "type": "sms", "number": "{{lead.Phone Number:default=edit me}}" },
     "message": {
       "content": {
         "type": "text",
-        "text": "Hello from Nexmo. The campaignID is {{campaign.id:default=Campaign Id}}"
+        "text": "Hello {{lead.First Name:default=Jon Doe}} from Nexmo. The campaignID is {{campaign.id:default=Campaign Id}}"
       }
     }
   }
-
 ```
-- Request Token Encoding: JSON
+- Request Token Encoding: None
 
 ![Webhook console](img/edit_webhook_sms.png)
 
