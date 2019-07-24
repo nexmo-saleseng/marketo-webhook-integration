@@ -5,7 +5,6 @@
 The following document is a guide for building and testing a Marketo Webhook that will send
 messages via Whatsapp using Nexmo Messages API.
 
-
 ### Building the Webhook in Marketo
 
 ##### Step 1
@@ -32,22 +31,30 @@ Put the following parameters:
 
 ```json
 {
-	"to": {"type": "whatsapp", "number": "{{lead.Phone Number:default=edit me}}"},
-	"from": {"type": "whatsapp", "number": "447418342149"},
-	"message": {"content": {"type": "template", "template":{
-            "name":"whatsapp:hsm:technology:nexmo:simplewelcome",
-            "parameters":[
-               {
-                  "default":"Nexmo {{lead.First Name:default=Jon Doe}}"
-               },
-               {
-                  "default":"interact with us over whatsapp. The campaignID is {{campaign.id:default=Campaign Id}}"
-               }
-            ]
-         }}}
+  "to": {
+    "type": "whatsapp",
+    "number": "{{lead.Phone Number:default=edit me}}"
+  },
+  "from": { "type": "whatsapp", "number": "447418342149" },
+  "message": {
+    "content": {
+      "type": "template",
+      "template": {
+        "name": "whatsapp:hsm:technology:nexmo:simplewelcome",
+        "parameters": [
+          {
+            "default": "Nexmo {{lead.First Name:default=Jon Doe}}"
+          },
+          {
+            "default": "interact with us over whatsapp. The campaignID is {{campaign.id:default=Campaign Id}}"
+          }
+        ]
+      }
+    }
+  }
 }
-
 ```
+
 - Request Token Encoding: None
 
 ![Webhook console](img/edit_webhook_wa.png)
@@ -56,9 +63,7 @@ Put the following parameters:
 
 Lastly, select `Webhooks Actions` --> `Set Custom Header` and put `Authorization`: `Bearer {JWT}`, with JWT value. For example, `Authorization: Bearer asd12456789`.
 
-
 Great! Now we need to test the Webhook in Marketo.
-
 
 ## SMS
 
@@ -88,26 +93,28 @@ Put the following parameters:
 
 - URL: `https://api.nexmo.com/v0.1/messages`
 - Request Type: `POST`
-- Example body: be sure to replace `to` field with your phone number. 
+- Example body: be sure to replace `to` field with your phone number.
+
 ```json
 {
-    "from": { "type": "sms", "number": "Nexmo" },
-    "to": { "type": "sms", "number": "{{lead.Phone Number:default=edit me}}" },
-    "message": {
-      "content": {
-        "type": "text",
-        "text": "Hello {{lead.First Name:default=Jon Doe}} from Nexmo. The campaignID is {{campaign.id:default=Campaign Id}}"
-      }
+  "from": { "type": "sms", "number": "Nexmo" },
+  "to": { "type": "sms", "number": "{{lead.Phone Number:default=edit me}}" },
+  "message": {
+    "content": {
+      "type": "text",
+      "text": "Hello {{lead.First Name:default=Jon Doe}} from Nexmo. The campaignID is {{campaign.id:default=Campaign Id}}"
     }
   }
+}
 ```
+
 - Request Token Encoding: None
 
 ![Webhook console](img/edit_webhook_sms.png)
 
 **Note**: Using the `INSERT TOKEN` button you can also use tokens in the messages body sent via Whatsapp. In the example above, I used campaign id in the message body.
 
-Lastly, select `Webhooks Actions` --> `Set Custom Header` and put `Authorization`: `Basic base64(API_KEY:API_SECRET)`. 
+Lastly, select `Webhooks Actions` --> `Set Custom Header` and put `Authorization`: `Basic base64(API_KEY:API_SECRET)`.
 
 If your API key were aaa012 and your API secret were abc123456789, you would concatenate the key and secret with a : (colon) symbol and then encode them using Base64 encoding to produce a value like this:
 
@@ -115,14 +122,12 @@ If your API key were aaa012 and your API secret were abc123456789, you would con
 Authorization: Basic YWFhMDEyOmFiYzEyMzQ1Njc4OQ==
 
 ```
+
 For example, `Authorization: Basic adj0qj30ajf0ajf0a==`.
 
 Check documentation here: [https://developer.nexmo.com/concepts/guides/authentication#header-based-api-key-and-secret-authentication](https://developer.nexmo.com/concepts/guides/authentication#header-based-api-key-and-secret-authentication)
 
-
-
 Great! Now we need to test the Webhook in Marketo.
-
 
 #### Smart Campaign
 
@@ -134,17 +139,14 @@ Create a New Campaign Folder. Then, select the folder and create a new Program.
 
 ![Admin console](img/new_program.png)
 
-Create a new Smart Campaign. Select the `Smart List` tab and pick a condition that will trigger the Webhook. 
+Create a new Smart Campaign. Select the `Smart List` tab and pick a condition that will trigger the Webhook.
 
 ![Admin console](img/smart_list.png)
 
 In this case we will send a message any time a lead fills out a form we have placed on a Marketo landing page (More info here: [LandingPage](https://docs.marketo.com/display/public/DOCS/Landing+Pages).
 
-
-
 Select Flow tab and pick the `Call Webhook` action.
 
-
-Finally, go to the `Schedule` tab and activate the campaign. 
+Finally, go to the `Schedule` tab and activate the campaign.
 
 **Congratulations**! Now visit the landing page and try out the webhook!
